@@ -7,7 +7,7 @@ class readable extends PassThrough {
 		super({ objectMode: false, encoding: 'utf-8' });
 		this.readFn = fn;
 		this.firstTime = true;
-		this.readStream = null;
+		this.readStream;
 	}
 	_read() {
 		if (this.firstTime) {
@@ -26,7 +26,7 @@ class writable extends PassThrough {
 		super({ objectMode: false, encoding: 'utf-8' });
 		this.writeFn = fn;
 		this.firstTime = true;
-		this.writeStream = null;
+		this.writeStream;
 	}
 	_write(chunk, enc, cb) {
 		if (this.firstTime) {
@@ -43,16 +43,3 @@ export const lazystream = {
 	readable: readable,
 	writable: writable,
 };
-
-const Rstream = new lazystream.readable(() =>
-	createReadStream('./helloworld.txt')
-);
-const Wstra = new lazystream.writable(() =>
-	createWriteStream('./helloworld2.txt')
-);
-
-try {
-	Rstream.pipe(Wstra);
-} catch (e) {
-	console.log(e);
-}
